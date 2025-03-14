@@ -31,6 +31,7 @@ class GraphAnalyzerContext():
     def __init__(self, geometric_graph: GeometricGraph):
         self.geometric_graph :GeometricGraph = geometric_graph
         self.isogroups : ISOGroups = ISOGroups()
+        self.last_isogroups = None
         self.storage = {}
 
     def set(self, key: str, value: any):
@@ -146,7 +147,7 @@ class GraphAnalyzer():
     def _vertex_expansion(self, ctx: GraphAnalyzerContext):
         print("_vertex_expansion()")
         global_graph = ctx.geometric_graph
-        groups = ctx.isogroups
+        groups = ctx.last_isogroups
 
         
         next_order_groups = ISOGroups()
@@ -184,6 +185,7 @@ class GraphAnalyzer():
         for next_order_group in next_order_groups.get_groups():
             ctx.isogroups.add_group(next_order_group)
         print(f"new isogroups size = {ctx.isogroups.size()}")
+        ctx.last_isogroups = next_order_groups
         return next_order_groups
 
     def _isogroups_filtering(self, ctx: GraphAnalyzerContext):
@@ -240,7 +242,8 @@ class GraphAnalyzer():
         ctx.storage = {}
         ctx.isogroups = ISOGroups()
         ctx.geometric_graph = geometric_graph
-        
+        ctx.last_isogroups = None
+
         ctx.set("last_n_isogroups", -1)
 
         current_order = 1 
@@ -253,6 +256,7 @@ class GraphAnalyzer():
             if current_order == 1:
                 self._generate_initial_isogroups(ctx)
                 ctx.set("any_vertex_extened", True)
+                ctx.last_isogroups = ctx.isogroups
             else:
                 self._isogroup_detection(ctx)
                 self._isogroup_selection(ctx)
@@ -266,3 +270,11 @@ class GraphAnalyzer():
 class GraphGrammarEncoder:
     def __init__(self):
         raise NotImplementedError
+    
+    @classmethod
+    def encode_graph_grammar(cls, isogroups: ISOGroups):
+        grammar = GeometricGraphGrammar()
+        for isogroup in isogroups.get_groups():
+            for graph in isogroup.get_graphs():
+                grammar.add_grammar(graph, )
+        return grammar

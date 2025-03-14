@@ -22,3 +22,11 @@ class GeometricGraph:
     def copy(self):
         graph = GeometricGraph(np.array(self.V), [list(edge) for edge in self.E], dim=self.dim)
         return graph
+    
+    def __hash__(self):
+        """Hash based on vertices and edges."""
+        return hash(tuple(map(tuple, self.V), tuple(self.E)))
+
+    def __eq__(self, other):
+        """Equality based on vertices and edges."""
+        return (np.array_equal(self.V, other.V) and (self.E == other.E))
