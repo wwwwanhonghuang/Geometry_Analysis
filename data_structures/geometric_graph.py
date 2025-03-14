@@ -1,5 +1,6 @@
 from typing import List
 from numpy.typing import NDArray
+import numpy as np
 
 class GeometricGraph:
     def __init__(self, V: NDArray, E: List[List[int]] = [], dim = 2):
@@ -17,3 +18,7 @@ class GeometricGraph:
 
     def __repr__(self):
         return self.__str__()
+    
+    def copy(self):
+        graph = GeometricGraph(np.array(self.V), [list(edge) for edge in self.E], dim=self.dim)
+        return graph

@@ -31,3 +31,5 @@ def geometry_graph_from_segments(segments: NDArray):
 
     graph = GeometricGraph(V, E, dim=dim)
     return graph
+
+
